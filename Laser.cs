@@ -38,9 +38,6 @@ namespace Raytracer
 				(float x, float y) = index == 0 ? info.element.GetTransformation(1f, 1.4f) : info.element.GetTransformation(1.4f, 1f);
 				float o = angle * x + angle * y;
 
-				// var vec = Vector4.Transform(new Vector4(0f, angle, 0f, 0f), index == 0 ? info.element.GetTransformation(1f, 1.4f) : info.element.GetTransformation(1.4f, 1f)).Xy;
-
-				// direction = Base.Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, vec.Y)); /* * (element is FlatMirror ? 1 : -1)*/
 				direction = Base.Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, o)); /* * (element is FlatMirror ? 1 : -1)*/
 
 				index++;
@@ -58,15 +55,15 @@ namespace Raytracer
 			Renderer2D.DrawQuad(position, size, Color4.White, rot);
 			Renderer2D.DrawQuad(position, size - new Base.Vector2(4f), color, rot);
 
-			foreach (Base.Vector2 collision in collisions)
-			{
-				Renderer2D.DrawQuad(collision, new Base.Vector2(5f), Color4.Yellow);
-			}
-
-			foreach ((Base.Vector2 p, Base.Vector2 n) in normals)
-			{
-				Renderer2D.DrawLine(p, p + n * 50f, Color4.Yellow);
-			}
+			// foreach (Base.Vector2 collision in collisions)
+			// {
+			// 	Renderer2D.DrawQuad(collision, new Base.Vector2(5f), Color4.Yellow);
+			// }
+			//
+			// foreach ((Base.Vector2 p, Base.Vector2 n) in normals)
+			// {
+			// 	Renderer2D.DrawLine(p, p + n * 50f, Color4.Yellow);
+			// }
 		}
 	}
 }
