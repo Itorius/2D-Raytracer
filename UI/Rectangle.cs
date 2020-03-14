@@ -15,6 +15,10 @@ namespace Raytracer.UI
 		{
 			X = x;
 			Y = y;
+
+			if (width < 0) width = 0;
+			if (height < 0) height = 0;
+
 			Width = width;
 			Height = height;
 		}

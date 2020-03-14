@@ -86,7 +86,7 @@ namespace Raytracer.UI
 			float minWidth = MinWidth ?? 0f;
 			float maxWidth = MaxWidth ?? float.PositiveInfinity;
 
-			Rectangle parent = Parent?.InnerDimensions ?? new Rectangle(0f, 0f, BaseWindow.Instance.Width, BaseWindow.Instance.Height);
+			Rectangle parent = Parent?.InnerDimensions ?? new Rectangle(0f, 0f, Game.Viewport.X, Game.Viewport.Y);
 
 			Dimensions.Width = Utility.Clamp(parent.Width * Width.Percent + Width.Pixels, minWidth, maxWidth);
 			Dimensions.Height = parent.Height * Height.Percent + Height.Pixels;
@@ -110,7 +110,7 @@ namespace Raytracer.UI
 		{
 			child.Parent = this;
 			Children.Add(child);
-			child.InternalRecalculate();
+			// child.InternalRecalculate();
 		}
 
 		public void Remove(UIElement child)
@@ -126,6 +126,8 @@ namespace Raytracer.UI
 
 			return ContainsPoint(x, y) ? this : null;
 		}
+
+		public UIElement GetElementAt(Vector2 point) => GetElementAt(point.X, point.Y);
 
 		protected bool ContainsPoint(float x, float y) => Dimensions.Contains(x, y);
 		#endregion
@@ -146,7 +148,7 @@ namespace Raytracer.UI
 		public void InternalDraw()
 		{
 			PreDraw();
-			
+
 			Draw();
 
 			Renderer2D.Flush();
@@ -154,13 +156,14 @@ namespace Raytracer.UI
 			if (OverflowHidden)
 			{
 				GL.Enable(EnableCap.ScissorTest);
-				GL.Scissor((int)InnerDimensions.X, BaseWindow.Instance.Height - (int)(InnerDimensions.Y + InnerDimensions.Height), (int)InnerDimensions.Width, (int)InnerDimensions.Height);
+				Rectangle sc = new Rectangle(InnerDimensions.X, Game.Viewport.Y - (InnerDimensions.Y + InnerDimensions.Height), InnerDimensions.Width, InnerDimensions.Height);
+				GL.Scissor((int)sc.X, (int)sc.Y, (int)sc.Width, (int)sc.Height);
 			}
 
 			foreach (UIElement child in Children) child.InternalDraw();
 
 			if (OverflowHidden) GL.Disable(EnableCap.ScissorTest);
-			
+
 			PostDraw();
 		}
 

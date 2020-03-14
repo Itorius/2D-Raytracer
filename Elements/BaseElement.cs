@@ -1,7 +1,7 @@
 using Base;
 using OpenTK;
 
-namespace Raytracer
+namespace Raytracer.Elements
 {
 	public abstract class BaseElement
 	{
@@ -28,6 +28,7 @@ namespace Raytracer
 		public Polygon collider => new Polygon(position - size * 0.5f, size);
 
 		public float RefractiveIndex = 1;
+		public bool selected;
 
 		public abstract Base.Vector2 GetTransformation(float initial, float final);
 
@@ -37,7 +38,7 @@ namespace Raytracer
 
 		public virtual void Draw()
 		{
-			var color = Color.Lerp(Color, ColorSelected, GameLayer.Instance.SelectedElement == this ? Utility.UnsignedSin(Time.TotalDrawTime * 3f) : 0f);
+			var color = Color.Lerp(Color, ColorSelected, selected ? Utility.UnsignedSin(Time.TotalDrawTime * 3f) : 0f);
 			Renderer2D.DrawQuad(position, size, color, quaternion);
 		}
 

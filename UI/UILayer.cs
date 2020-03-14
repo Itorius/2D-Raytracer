@@ -1,5 +1,4 @@
 using Base;
-using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 
@@ -7,89 +6,79 @@ namespace Raytracer.UI
 {
 	public class UILayer : Layer
 	{
-		public static Base.Vector2 MousePosition;
-
-		private Matrix4 ViewProjection;
+		private Camera camera;
 		private Shader shader;
-
-		private UIElement Base;
+		private UIElement screen;
+		private UIElement oldHovered;
+		private UIElement oldPressed;
 
 		public override void OnAttach()
 		{
+			camera = new Camera();
+
 			shader = ResourceManager.GetShader("Assets/Shaders/Flat.vert", "Assets/Shaders/Flat.frag");
 
-			Base = new UIElement
+			screen = new UIElement
 			{
 				Width = { Percent = 1f },
 				Height = { Percent = 1f }
 			};
 
 			Sidebar sidebar = new Sidebar();
-			Base.Append(sidebar);
+			screen.Append(sidebar);
+			screen.InternalRecalculate();
 		}
 
 		public override void OnWindowResize(int width, int height)
 		{
-			ViewProjection = Matrix4.CreateOrthographicOffCenter(0, width, height, 0, -1f, 1f);
-
 			GL.Viewport(0, 0, width, height);
+			camera.SetViewportOffCenter(0, width, height, 0);
 
-			Base.InternalRecalculate();
+			screen.InternalRecalculate();
 		}
 
 		public override bool OnMouseUp(MouseButtonEventArgs args)
 		{
-			if (mousedowned != null)
+			if (oldPressed != null)
 			{
-				mousedowned.InternalMouseUp(args);
-				mousedowned = null;
+				oldPressed.InternalMouseUp(args);
+				oldPressed = null;
 				return true;
 			}
 
 			return false;
 		}
 
-		private UIElement mousedowned;
-
 		public override bool OnMouseDown(MouseButtonEventArgs args)
 		{
-			return Base.InternalMouseDown(args, out mousedowned);
-		}
-
-		private UIElement prev;
-
-		public override bool OnMouseMove(MouseMoveEventArgs args)
-		{
-			MousePosition = new Base.Vector2(args.X, args.Y);
-
-			return false;
+			return screen.InternalMouseDown(args, out oldPressed);
 		}
 
 		public override bool OnMouseScroll(MouseWheelEventArgs args)
 		{
-			return Base.InternalMouseWheel(args);
+			return screen.InternalMouseWheel(args);
 		}
 
 		public override void OnUpdate()
 		{
-			Base.InternalUpdate();
+			screen.InternalUpdate();
 
-			UIElement mouse = Base.GetElementAt(MousePosition.X, MousePosition.Y);
+			UIElement mouse = screen.GetElementAt(GameLayer.MousePosition);
 
-			if (mouse != prev)
+			if (mouse != oldHovered)
 			{
-				prev?.MouseLeave();
+				oldHovered?.MouseLeave();
 				mouse?.MouseEnter();
 
-				prev = mouse;
+				oldHovered = mouse;
 			}
 		}
 
 		public override void OnRender()
 		{
-			Renderer2D.BeginScene(ViewProjection, shader);
+			Renderer2D.BeginScene(camera, shader);
 
-			Base.InternalDraw();
+			screen.InternalDraw();
 
 			Renderer2D.EndScene();
 		}

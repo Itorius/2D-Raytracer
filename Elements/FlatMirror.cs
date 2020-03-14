@@ -1,4 +1,4 @@
-namespace Raytracer
+namespace Raytracer.Elements
 {
 	public class FlatMirror : BaseElement
 	{

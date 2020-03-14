@@ -1,5 +1,6 @@
 using Base;
-using System;
+using Raytracer.Elements;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Raytracer

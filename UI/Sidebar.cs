@@ -1,6 +1,5 @@
-using Base;
-using OpenTK;
 using OpenTK.Graphics;
+using Raytracer.Elements;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -49,7 +48,7 @@ namespace Raytracer.UI
 				Y = { Percent = 1f },
 				Text = "Quit"
 			};
-			button.OnClick += () => BaseWindow.Instance.Exit();
+			button.OnClick += () => Game.Instance.Exit();
 			Append(button);
 		}
 
@@ -57,8 +56,8 @@ namespace Raytracer.UI
 		{
 			if (UIOpticalElement.MouseElement != null)
 			{
-				UIOpticalElement.MouseElement.position = UILayer.MousePosition;
-				
+				UIOpticalElement.MouseElement.position = GameLayer.MousePosition;
+
 				UIOpticalElement.MouseElement.Draw();
 			}
 		}

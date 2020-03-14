@@ -1,9 +1,10 @@
 using Base;
 using OpenTK;
+using OpenTK.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace Raytracer
+namespace Raytracer.Elements
 {
 	public class Laser : BaseElement
 	{
@@ -73,20 +74,14 @@ namespace Raytracer
 
 		public override void Draw()
 		{
-			for (int i = 0; i < collisions.Count - 1; i++) Renderer2D.DrawLine(collisions[i + 1], collisions[i], Color);
-
-			var color = Color.Lerp(Color, Color * 0.7f, GameLayer.Instance.SelectedElement == this ? Utility.UnsignedSin(Time.TotalDrawTime * 3f) : 0f);
+			var color = Color.Lerp(Color, Color * 0.7f, selected ? Utility.UnsignedSin(Time.TotalDrawTime * 3f) : 0f);
 			Renderer2D.DrawQuad(position, size, color, quaternion);
 
-			// foreach (Base.Vector2 collision in collisions)
-			// {
-			// 	Renderer2D.DrawQuad(collision, new Base.Vector2(5f), Color4.Yellow);
-			// }
-			//
-			// foreach ((Base.Vector2 p, Base.Vector2 n) in normals)
-			// {
-			// 	Renderer2D.DrawLine(p, p + n * 50f, Color4.Yellow);
-			// }
+			if (Game.DebugDraw)
+			{
+				foreach (Base.Vector2 collision in collisions) Renderer2D.DrawQuad(collision, new Base.Vector2(5f), Color4.Yellow);
+				foreach ((Base.Vector2 point, Base.Vector2 normal) in normals) Renderer2D.DrawLine(point, point + normal * 50f, Color4.Yellow);
+			}
 		}
 
 		public override BaseElement Clone()
@@ -95,6 +90,11 @@ namespace Raytracer
 			element.collisions = new List<Base.Vector2>();
 			element.normals = new List<(Base.Vector2, Base.Vector2)>();
 			return element;
+		}
+
+		public void DrawRay()
+		{
+			for (int i = 0; i < collisions.Count - 1; i++) Renderer2D.DrawLine(collisions[i + 1], collisions[i], Color);
 		}
 	}
 }
