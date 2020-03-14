@@ -15,17 +15,7 @@ namespace Raytracer.UI
 
 		public event Action OnClick;
 
-		private bool IsMouseHovering;
-
-		public override void MouseEnter()
-		{
-			IsMouseHovering = true;
-		}
-
-		public override void MouseLeave()
-		{
-			IsMouseHovering = false;
-		}
+		protected override bool MouseDown(MouseButtonEventArgs args) => true;
 
 		protected override bool MouseUp(MouseButtonEventArgs args)
 		{

@@ -22,10 +22,14 @@ namespace Raytracer.Elements
 			}
 		}
 
+		private Matrix4 localtoworld => Matrix4.CreateRotationZ(_rotation) * Matrix4.CreateTranslation(position.X, position.Y, 0f);
+
 		protected Color Color = new Color(100, 149, 237, 100);
 		protected Color ColorSelected = new Color(100, 149, 237, 150);
 
-		public Polygon collider => new Polygon(position - size * 0.5f, size);
+		public Polygon collider => new Polygon(-size * 0.5f, size);
+
+		public Polygon rotatedCollider => Polygon.Transform(collider, localtoworld);
 
 		public float RefractiveIndex = 1;
 		public bool selected;
@@ -44,7 +48,7 @@ namespace Raytracer.Elements
 
 		public bool ContainsPoint(Base.Vector2 point)
 		{
-			return Collision.PointPolygon(collider, point);
+			return Collision.PointPolygon(Polygon.Transform(collider, localtoworld), point);
 		}
 
 		public virtual BaseElement Clone()

@@ -53,6 +53,10 @@ namespace Raytracer
 		private BaseElement selectedElement;
 		private BaseElement dragElement;
 		private Vector2 offset;
+		private float rotationOffset;
+		private float originalRotation;
+		private bool inRotationCircle;
+		private bool rotating;
 
 		public override bool OnMouseMove(MouseMoveEventArgs args)
 		{
@@ -62,6 +66,14 @@ namespace Raytracer
 
 		public override bool OnMouseDown(MouseButtonEventArgs args)
 		{
+			if (inRotationCircle)
+			{
+				rotating = true;
+				rotationOffset = Vector2.Atan(MouseWorld - selectedElement.position);
+				originalRotation = selectedElement.Rotation;
+				return true;
+			}
+
 			if (selectedElement != null) selectedElement.selected = false;
 
 			selectedElement = Elements.LastOrDefault(element => element.ContainsPoint(MouseWorld));
@@ -80,6 +92,7 @@ namespace Raytracer
 		public override bool OnMouseUp(MouseButtonEventArgs args)
 		{
 			dragElement = null;
+			rotating = false;
 
 			return true;
 		}

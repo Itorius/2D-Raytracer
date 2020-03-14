@@ -1,6 +1,5 @@
 using Base;
 using Raytracer.Elements;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Raytracer
@@ -22,7 +21,7 @@ namespace Raytracer
 
 			foreach (BaseElement element in GameLayer.Instance.Elements)
 			{
-				if (Collision.LinePolygon(line, element.collider)) hit = true;
+				if (Collision.LinePolygon(line, element.rotatedCollider)) hit = true;
 			}
 
 			return hit;
@@ -34,7 +33,7 @@ namespace Raytracer
 
 			foreach (BaseElement element in GameLayer.Instance.Elements.OrderBy(element => Vector2.DistanceSquared(start, element.position)))
 			{
-				if (Collision.LinePolygon(line, element.collider, out (Line line, Vector2 intersection) point))
+				if (Collision.LinePolygon(line, element.rotatedCollider, out (Line line, Vector2 intersection) point))
 				{
 					var dir = Vector2.Normalize(point.line.end - point.line.start);
 					float dot = Vector2.Dot(direction, dir.PerpendicularLeft);

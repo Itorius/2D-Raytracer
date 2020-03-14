@@ -29,6 +29,8 @@ namespace Raytracer.UI
 
 		public bool OverflowHidden = false;
 
+		public bool IsMouseHovering { get; private set; }
+
 		#region Events
 		protected virtual bool MouseScroll(MouseWheelEventArgs args)
 		{
@@ -73,10 +75,12 @@ namespace Raytracer.UI
 
 		public virtual void MouseEnter()
 		{
+			IsMouseHovering = true;
 		}
 
 		public virtual void MouseLeave()
 		{
+			IsMouseHovering = false;
 		}
 		#endregion
 

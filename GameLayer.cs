@@ -1,7 +1,6 @@
 using Base;
 using ImGuiNET;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Raytracer.Elements;
 using System.Collections.Generic;
@@ -11,6 +10,10 @@ namespace Raytracer
 {
 	public partial class GameLayer : Layer
 	{
+		private const float RotationRingSize = 60f;
+		private const float RotationRingMax = RotationRingSize + 2.5f;
+		private const float RotationRingMin = RotationRingSize - 7.5f;
+
 		internal static GameLayer Instance;
 
 		public static Base.Vector2 MouseWorld;
@@ -33,7 +36,7 @@ namespace Raytracer
 			elementShader = ResourceManager.GetShader("Assets/Shaders/Flat.vert", "Assets/Shaders/Flat.frag");
 
 			// todo: replace with loading and saving
-			Elements.Add(new Laser { position = new Base.Vector2(-300f, -50f), size = new Base.Vector2(100f, 20f), Rotation = 30f * Utility.DegToRad });
+			Elements.Add(new Laser { position = new Base.Vector2(-300f, -50f), size = new Base.Vector2(100f, 20f) });
 			Elements.Add(new FlatRefractor { size = new Base.Vector2(100f, 1000f) });
 
 			framebuffer = new MultisampleFramebuffer(1280, 720, 8);
@@ -46,6 +49,15 @@ namespace Raytracer
 
 			if (dragElement != null) dragElement.position = MouseWorld - offset;
 
+			inRotationCircle = false;
+			if (selectedElement != null)
+			{
+				float dist = Base.Vector2.DistanceSquared(selectedElement.position, MouseWorld);
+				if (dist < RotationRingMax * RotationRingMax && dist > RotationRingMin * RotationRingMin) inRotationCircle = true;
+			}
+
+			if (rotating && selectedElement != null) selectedElement.Rotation = originalRotation + (Base.Vector2.Atan(MouseWorld - selectedElement.position) - rotationOffset);
+
 			foreach (BaseElement element in Elements) element.Update();
 		}
 
@@ -56,8 +68,6 @@ namespace Raytracer
 
 			Renderer2D.BeginScene(camera, elementShader, framebuffer);
 			framebuffer.Clear();
-
-			Elements[0].Rotation = angle * Utility.DegToRad;
 
 			foreach (Laser laser in Elements.OfType<Laser>()) laser.DrawRay();
 			foreach (BaseElement element in Elements) element.Draw();
@@ -71,7 +81,7 @@ namespace Raytracer
 				s.UploadUniformFloat("u_Radius", 1f);
 				s.UploadUniformFloat("u_Thickness", 0.95f);
 
-				Renderer2D.DrawQuad(selectedElement.position, new Base.Vector2(120f), Color4.White);
+				Renderer2D.DrawQuad(selectedElement.position, new Base.Vector2(RotationRingSize * 2f), inRotationCircle ? Color.White : new Color(100, 100, 100, 255));
 
 				Renderer2D.EndScene();
 			}
@@ -85,16 +95,12 @@ namespace Raytracer
 			screenShader.Unbind();
 		}
 
-		private float angle;
-
 		public override void OnGUI()
 		{
 			ImGui.Begin("Editor");
 
 			ImGui.Text($"FPS: {1 / Time.DeltaDrawTime:F2}");
 			ImGui.Text($"Frametime: {Time.DeltaDrawTime * 1000f:F2}ms");
-
-			ImGui.DragFloat("rot", ref angle);
 
 			ImGui.End();
 		}
