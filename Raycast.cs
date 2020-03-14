@@ -1,4 +1,6 @@
 using Base;
+using System;
+using System.Linq;
 
 namespace Raytracer
 {
@@ -29,15 +31,17 @@ namespace Raytracer
 		{
 			Line line = new Line(start, start + direction * maxDistance);
 
-			foreach (BaseElement element in GameLayer.Instance.Elements)
+			foreach (BaseElement element in GameLayer.Instance.Elements.OrderBy(element => Vector2.DistanceSquared(start, element.position)))
 			{
 				if (Collision.LinePolygon(line, element.collider, out (Line line, Vector2 intersection) point))
 				{
 					var dir = Vector2.Normalize(point.line.end - point.line.start);
+					float dot = Vector2.Dot(direction, dir.PerpendicularLeft);
+
 					info = new RaycastInfo
 					{
 						point = point.intersection,
-						normal = dir.PerpendicularRight.X < 0 ? dir.PerpendicularRight : dir.PerpendicularLeft,
+						normal = dot < 0 ? dir.PerpendicularLeft : dir.PerpendicularRight,
 						element = element
 					};
 

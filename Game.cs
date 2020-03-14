@@ -1,4 +1,5 @@
 ﻿using Base;
+using Raytracer.UI;
 
 namespace Raytracer
 {
