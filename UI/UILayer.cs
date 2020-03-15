@@ -80,6 +80,8 @@ namespace Raytracer.UI
 
 			screen.InternalDraw();
 
+			Renderer2D.DrawString($"FPS: {1 / Time.DeltaDrawTime:F2}", 10f, 10f, scale: 0.5f);
+
 			Renderer2D.EndScene();
 		}
 	}

@@ -56,7 +56,7 @@ namespace Raytracer.UI
 		{
 			if (UIOpticalElement.MouseElement != null)
 			{
-				UIOpticalElement.MouseElement.position = GameLayer.MousePosition;
+				UIOpticalElement.MouseElement.Position = GameLayer.MousePosition;
 
 				UIOpticalElement.MouseElement.Draw();
 			}

@@ -63,7 +63,6 @@ namespace Raytracer.UI
 		public Color4 HoveredColor = new Color4(60, 60, 60, 255);
 
 		private BaseElement element;
-		private bool IsMouseHovering;
 
 		public static BaseElement MouseElement;
 
@@ -102,14 +101,14 @@ namespace Raytracer.UI
 
 		public override void MouseEnter()
 		{
-			IsMouseHovering = true;
+			base.MouseEnter();
 
 			destScale = 0.7f;
 		}
 
 		public override void MouseLeave()
 		{
-			IsMouseHovering = false;
+			base.MouseLeave();
 
 			destScale = 0.6f;
 		}

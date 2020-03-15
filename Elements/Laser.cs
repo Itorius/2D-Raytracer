@@ -25,7 +25,7 @@ namespace Raytracer.Elements
 			normals.Clear();
 
 			Base.Vector2 direction = Base.Vector2.Transform(Base.Vector2.UnitX, quaternion);
-			Base.Vector2 start = position + direction * size.X * 0.51f;
+			Base.Vector2 start = Position + direction * Size.X * 0.51f;
 
 			collisions.Add(start);
 
@@ -69,13 +69,13 @@ namespace Raytracer.Elements
 				if (index > 50) break;
 			}
 
-			collisions.Add(start + direction * 1000f);
+			collisions.Add(start + direction * 1000000f);
 		}
 
 		public override void Draw()
 		{
 			var color = Color.Lerp(Color, Color * 0.7f, selected ? Utility.UnsignedSin(Time.TotalDrawTime * 3f) : 0f);
-			Renderer2D.DrawQuad(position, size, color, quaternion);
+			Renderer2D.DrawQuad(Position, Size, color, quaternion);
 
 			if (Game.DebugDraw)
 			{

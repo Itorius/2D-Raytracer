@@ -11,6 +11,7 @@ namespace Raytracer
 		#region Camera
 		public Camera camera;
 		private Vector2 CameraPosition;
+		private bool[] pressed = new bool[Enum.GetNames(typeof(Key)).Length];
 
 		public override void OnWindowResize(int width, int height)
 		{
@@ -19,8 +20,6 @@ namespace Raytracer
 			if (width != 0 && height != 0) framebuffer.SetSize(width, height);
 		}
 
-		private bool[] pressed=new bool[Enum.GetNames(typeof(Key)).Length];
-		
 		public override bool OnKeyDown(KeyboardKeyEventArgs args)
 		{
 			pressed[(int)args.Key] = true;
