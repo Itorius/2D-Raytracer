@@ -1,10 +1,12 @@
 using Base;
+using Newtonsoft.Json;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 using Raytracer.Elements;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Raytracer
@@ -36,10 +38,23 @@ namespace Raytracer
 			screenShader = ResourceManager.GetShader("Assets/Shaders/Screen.vert", "Assets/Shaders/Screen.frag");
 			elementShader = ResourceManager.GetShader("Assets/Shaders/Flat.vert", "Assets/Shaders/Flat.frag");
 
-			// todo: replace with loading and saving
-			Elements.Add(new Laser { Position = new Base.Vector2(-300f, -50f), Size = new Base.Vector2(100f, 20f) });
-			Elements.Add(new FlatRefractor { Size = new Base.Vector2(100f, 1000f) });
+			if (File.Exists("Data.json"))
+			{
+				string json = File.ReadAllText("Data.json");
+				List<SaveData> data = JsonConvert.DeserializeObject<List<SaveData>>(json);
 
+				foreach (SaveData saveData in data)
+				{
+					BaseElement element = (BaseElement)Activator.CreateInstance(Type.GetType(saveData.type));
+					element.Size = saveData.size;
+					element.Position = saveData.position;
+					element.Rotation = saveData.rotation;
+					element.Color = saveData.color;
+					element.RefractiveIndex = saveData.refractionIndex;
+					Elements.Add(element);
+				}
+			}
+			
 			framebuffer = new MultisampleFramebuffer(1280, 720, 8);
 		}
 
