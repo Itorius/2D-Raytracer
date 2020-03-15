@@ -26,7 +26,7 @@ namespace Raytracer.UI
 				Width = { Percent = 1f },
 				Height = { Pixels = 40f },
 				Y = { Percent = 1f },
-				Text = "Save & Quit"
+				Text = Localization.GetTranslation("SaveAndQuit")
 			};
 			button.OnClick += () =>
 			{
