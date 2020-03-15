@@ -27,6 +27,12 @@ namespace Raytracer
 
 		public override bool OnKeyDown(KeyboardKeyEventArgs args)
 		{
+			if (selectedElement != null && args.Key == Key.Delete)
+			{
+				Elements.Remove(selectedElement);
+				selectedElement = null;
+			}
+
 			pressed[(int)args.Key] = true;
 
 			return true;
