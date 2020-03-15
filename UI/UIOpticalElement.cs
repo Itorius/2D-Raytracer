@@ -79,22 +79,21 @@ namespace Raytracer.UI
 			Dimensions.Height = Dimensions.Width;
 			InnerDimensions.Height = InnerDimensions.Width;
 
-			element.position = InnerDimensions.Center;
-			element.size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * 0.6f);
+			element.Position = InnerDimensions.Center;
+			element.Size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * 0.6f);
 		}
 
 		protected override bool MouseDown(MouseButtonEventArgs args)
 		{
 			MouseElement = element.Clone();
+			if (element is Laser laser) laser.Color = Color.FromHsv(new Random().NextFloat(), 1f, 0.9f, 1f);
 
 			return true;
 		}
 
 		protected override bool MouseUp(MouseButtonEventArgs args)
 		{
-			(float x, float y) = Vector2.Transform(GameLayer.MousePosition, GameLayer.Instance.camera.View);
-			MouseElement.position = new Vector2(x - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - y);
-
+			MouseElement.Position = GameLayer.MouseWorld;
 			GameLayer.Instance.Elements.Add(MouseElement);
 			MouseElement = null;
 
@@ -125,7 +124,7 @@ namespace Raytracer.UI
 			if (scale < destScale) scale += 1f * Time.DeltaDrawTime;
 			if (scale > destScale) scale -= 1f * Time.DeltaDrawTime;
 
-			element.size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * scale);
+			element.Size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * scale);
 
 			Renderer2D.DrawQuadTL(Dimensions.Position, Dimensions.Size, BorderColor);
 			Renderer2D.DrawQuadTL(Dimensions.Position + new Vector2(2f), Dimensions.Size - new Vector2(4f), IsMouseHovering ? HoveredColor : BackgroundColor);
