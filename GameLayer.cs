@@ -1,9 +1,9 @@
 using Base;
-using ImGuiNET;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 using Raytracer.Elements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -66,7 +66,11 @@ namespace Raytracer
 				if (dist < RotationRingMax * RotationRingMax && dist > RotationRingMin * RotationRingMin) inRotationCircle = true;
 			}
 
-			if (rotating && selectedElement != null) selectedElement.Rotation = originalRotation + (Base.Vector2.Atan(MouseWorld - selectedElement.Position) - rotationOffset);
+			if (rotating && selectedElement != null)
+			{
+				float rot = originalRotation + Base.Vector2.Atan(MouseWorld - selectedElement.Position) - rotationOffset;
+				selectedElement.Rotation = pressed[(int)Key.LShift] ? MathF.Round(rot / 0.08726645F) * 0.08726645F : rot;
+			}
 
 			foreach (BaseElement element in Elements) element.Update();
 		}
@@ -93,6 +97,8 @@ namespace Raytracer
 
 				Renderer2D.DrawQuad(selectedElement.Position, new Base.Vector2(RotationRingSize * 2f), inRotationCircle ? Color.White : new Color(100, 100, 100, 255));
 
+				if (rotating) Renderer2D.DrawStringFlipped($"{MathF.Asin(MathF.Sin(selectedElement.Rotation * 0.5f)) * -2f * Utility.RadToDeg:F2}°", selectedElement.Position.X + RotationRingSize + 10f, selectedElement.Position.Y + 5f, scale: 0.5f);
+
 				Renderer2D.EndScene();
 			}
 
@@ -103,16 +109,6 @@ namespace Raytracer
 			framebuffer.Draw();
 
 			screenShader.Unbind();
-		}
-
-		public override void OnGUI()
-		{
-			ImGui.Begin("Editor");
-
-			ImGui.Text($"FPS: {1 / Time.DeltaDrawTime:F2}");
-			ImGui.Text($"Frametime: {Time.DeltaDrawTime * 1000f:F2}ms");
-
-			ImGui.End();
 		}
 	}
 }
