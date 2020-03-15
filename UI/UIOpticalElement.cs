@@ -131,7 +131,7 @@ namespace Raytracer.UI
 			element.Draw();
 
 			Renderer2D.DrawQuadTL(Dimensions.Position + new Vector2(2f, Dimensions.Height - 22f), new Vector2(Dimensions.Width - 4f, 20f), IsMouseHovering ? HoveredColor : BackgroundColor);
-			size = Renderer2D.DrawString(element.GetType().Name, InnerDimensions.X + InnerDimensions.Width * 0.5f - size.X * 0.5f, InnerDimensions.Y + InnerDimensions.Height - size.Y - 2f, scale: 0.4f);
+			size = Renderer2D.DrawString(Localization.GetTranslation(element.GetType().Name), InnerDimensions.X + InnerDimensions.Width * 0.5f - size.X * 0.5f, InnerDimensions.Y + InnerDimensions.Height - size.Y - 2f, scale: 0.4f);
 		}
 	}
 }
