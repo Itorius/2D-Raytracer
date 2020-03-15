@@ -39,8 +39,9 @@ namespace Raytracer.UI
 
 		public bool InternalMouseWheel(MouseWheelEventArgs args)
 		{
-			foreach (UIElement child in Children)
+			for (int i = Children.Count - 1; i >= 0; i--)
 			{
+				UIElement child = Children[i];
 				if (child.ContainsPoint(args.X, args.Y) && child.InternalMouseWheel(args)) return true;
 			}
 
@@ -181,5 +182,37 @@ namespace Raytracer.UI
 			foreach (UIElement child in Children) child.InternalUpdate();
 		}
 		#endregion
+
+		public bool InternalKeyUp(KeyboardKeyEventArgs args)
+		{
+			foreach (UIElement child in Children)
+			{
+				if (child.InternalKeyUp(args)) return true;
+			}
+
+			return KeyUp(args);
+		}
+
+		protected virtual bool KeyUp(KeyboardKeyEventArgs args)
+		{
+			return false;
+		}
+
+		public bool InternalKeyDown(KeyboardKeyEventArgs args)
+		{
+			foreach (UIElement child in Children)
+			{
+				if (child.InternalKeyDown(args)) return true;
+			}
+
+			return KeyDown(args);
+		}
+
+		protected virtual bool KeyDown(KeyboardKeyEventArgs args)
+		{
+			return false;
+		}
+
+		public bool Contains(UIElement element) => Children.Contains(element);
 	}
 }

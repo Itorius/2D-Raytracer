@@ -19,7 +19,7 @@ namespace Raytracer.UI
 			UIPanel panel = new UIPanel
 			{
 				Width = { Percent = 1f },
-				Height = { Percent = 1f, Pixels = -48f },
+				Height = { Percent = 1f},
 				BackgroundColor = new Color4(20, 20, 20, 255),
 				Padding = new Padding(8f)
 			};
@@ -40,16 +40,6 @@ namespace Raytracer.UI
 				};
 				grid.Append(b);
 			}
-
-			UIButton button = new UIButton
-			{
-				Width = { Percent = 1f },
-				Height = { Pixels = 40f },
-				Y = { Percent = 1f },
-				Text = "Quit"
-			};
-			button.OnClick += () => Game.Instance.Exit();
-			Append(button);
 		}
 
 		protected override void PostDraw()

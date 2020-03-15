@@ -15,11 +15,14 @@ namespace Raytracer.UI
 
 		public event Action OnClick;
 
-		protected override bool MouseDown(MouseButtonEventArgs args) => true;
+		protected override bool MouseDown(MouseButtonEventArgs args)
+		{
+			OnClick?.Invoke();
+			return true;
+		}
 
 		protected override bool MouseUp(MouseButtonEventArgs args)
 		{
-			OnClick?.Invoke();
 			return true;
 		}
 

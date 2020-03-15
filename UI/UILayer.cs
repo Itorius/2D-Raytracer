@@ -12,6 +12,8 @@ namespace Raytracer.UI
 		private UIElement oldHovered;
 		private UIElement oldPressed;
 
+		private Menu menu;
+
 		public override void OnAttach()
 		{
 			camera = new Camera();
@@ -24,6 +26,8 @@ namespace Raytracer.UI
 				Height = { Percent = 1f }
 			};
 
+			menu = new Menu();
+
 			Sidebar sidebar = new Sidebar();
 			screen.Append(sidebar);
 			screen.InternalRecalculate();
@@ -35,6 +39,28 @@ namespace Raytracer.UI
 			camera.SetViewportOffCenter(0, width, height, 0);
 
 			screen.InternalRecalculate();
+		}
+
+		public override bool OnKeyDown(KeyboardKeyEventArgs args)
+		{
+			if (args.Key == Key.Escape)
+			{
+				if (screen.Contains(menu)) screen.Remove(menu);
+				else
+				{
+					screen.Append(menu);
+					screen.InternalRecalculate();
+				}
+
+				return true;
+			}
+
+			return screen.InternalKeyDown(args);
+		}
+
+		public override bool OnKeyUp(KeyboardKeyEventArgs args)
+		{
+			return screen.InternalKeyUp(args);
 		}
 
 		public override bool OnMouseUp(MouseButtonEventArgs args)

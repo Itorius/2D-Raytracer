@@ -1,7 +1,11 @@
 using Base;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using OpenTK.Input;
 using Raytracer.Elements;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Raytracer
@@ -94,5 +98,44 @@ namespace Raytracer
 			return true;
 		}
 		#endregion
+
+		public void Save()
+		{
+			List<SaveData> list = Elements.Select(element => new SaveData(element.GetType().AssemblyQualifiedName, element.Position, element.Size, element.Rotation, element.Color)).ToList();
+
+			string json = JsonConvert.SerializeObject(list, new JsonSerializerSettings
+			{
+				ContractResolver = new WritablePropertiesOnlyResolver()
+			});
+			File.WriteAllText("Data.json", json);
+		}
+	}
+
+	internal class WritablePropertiesOnlyResolver : DefaultContractResolver
+	{
+		protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+		{
+			IList<JsonProperty> props = base.CreateProperties(type, memberSerialization);
+			return props.Where(property => property.Writable).ToList();
+		}
+	}
+
+	[Serializable]
+	internal struct SaveData
+	{
+		public string type;
+		public Vector2 position;
+		public Vector2 size;
+		public float rotation;
+		public Color color;
+
+		public SaveData(string type, Vector2 position, Vector2 size, float rotation, Color color)
+		{
+			this.type = type;
+			this.position = position;
+			this.size = size;
+			this.rotation = rotation;
+			this.color = color;
+		}
 	}
 }
