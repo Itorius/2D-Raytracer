@@ -55,7 +55,7 @@ namespace Raytracer
 			camera.SetPosition(CameraPosition);
 
 			(float x, float y) = Base.Vector2.Transform(MousePosition, camera.View.Inverted());
-			MouseWorld = new Base.Vector2(x - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - y);
+			MouseWorld = new Base.Vector2(x - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - y) / cameraZoom;
 
 			if (dragElement != null) dragElement.Position = MouseWorld - offset;
 

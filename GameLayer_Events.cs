@@ -12,6 +12,7 @@ namespace Raytracer
 		public Camera camera;
 		private Vector2 CameraPosition;
 		private bool[] pressed = new bool[Enum.GetNames(typeof(Key)).Length];
+		private float cameraZoom = 1f;
 
 		public override void OnWindowResize(int width, int height)
 		{
@@ -30,6 +31,16 @@ namespace Raytracer
 		public override bool OnKeyUp(KeyboardKeyEventArgs args)
 		{
 			pressed[(int)args.Key] = false;
+
+			return true;
+		}
+
+		public override bool OnMouseScroll(MouseWheelEventArgs args)
+		{
+			cameraZoom += args.DeltaPrecise * 0.1f;
+			cameraZoom = Utility.Clamp(cameraZoom, 0.1f, 10f);
+
+			camera.SetZoom(cameraZoom);
 
 			return true;
 		}
