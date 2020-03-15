@@ -2,6 +2,7 @@ using Base;
 using ImGuiNET;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Input;
 using Raytracer.Elements;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,27 +37,36 @@ namespace Raytracer
 			elementShader = ResourceManager.GetShader("Assets/Shaders/Flat.vert", "Assets/Shaders/Flat.frag");
 
 			// todo: replace with loading and saving
-			Elements.Add(new Laser { position = new Base.Vector2(-300f, -50f), size = new Base.Vector2(100f, 20f) });
-			Elements.Add(new FlatRefractor { size = new Base.Vector2(100f, 1000f) });
+			Elements.Add(new Laser { Position = new Base.Vector2(-300f, -50f), Size = new Base.Vector2(100f, 20f) });
+			Elements.Add(new FlatRefractor { Size = new Base.Vector2(100f, 1000f) });
 
 			framebuffer = new MultisampleFramebuffer(1280, 720, 8);
 		}
 
 		public override void OnUpdate()
 		{
+			Base.Vector2 velocity = Base.Vector2.Zero;
+			if (pressed[(int)Key.W]) velocity.Y = -1f;
+			if (pressed[(int)Key.S]) velocity.Y = 1f;
+			if (pressed[(int)Key.A]) velocity.X = 1f;
+			if (pressed[(int)Key.D]) velocity.X = -1f;
+
+			CameraPosition += velocity * (pressed[(int)Key.ShiftLeft] || pressed[(int)Key.ShiftRight] ? 20f : 10f);
+			camera.SetPosition(CameraPosition);
+
 			(float x, float y) = Base.Vector2.Transform(MousePosition, camera.View.Inverted());
 			MouseWorld = new Base.Vector2(x - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - y);
 
-			if (dragElement != null) dragElement.position = MouseWorld - offset;
+			if (dragElement != null) dragElement.Position = MouseWorld - offset;
 
 			inRotationCircle = false;
 			if (selectedElement != null)
 			{
-				float dist = Base.Vector2.DistanceSquared(selectedElement.position, MouseWorld);
+				float dist = Base.Vector2.DistanceSquared(selectedElement.Position, MouseWorld);
 				if (dist < RotationRingMax * RotationRingMax && dist > RotationRingMin * RotationRingMin) inRotationCircle = true;
 			}
 
-			if (rotating && selectedElement != null) selectedElement.Rotation = originalRotation + (Base.Vector2.Atan(MouseWorld - selectedElement.position) - rotationOffset);
+			if (rotating && selectedElement != null) selectedElement.Rotation = originalRotation + (Base.Vector2.Atan(MouseWorld - selectedElement.Position) - rotationOffset);
 
 			foreach (BaseElement element in Elements) element.Update();
 		}
@@ -81,7 +91,7 @@ namespace Raytracer
 				s.UploadUniformFloat("u_Radius", 1f);
 				s.UploadUniformFloat("u_Thickness", 0.95f);
 
-				Renderer2D.DrawQuad(selectedElement.position, new Base.Vector2(RotationRingSize * 2f), inRotationCircle ? Color.White : new Color(100, 100, 100, 255));
+				Renderer2D.DrawQuad(selectedElement.Position, new Base.Vector2(RotationRingSize * 2f), inRotationCircle ? Color.White : new Color(100, 100, 100, 255));
 
 				Renderer2D.EndScene();
 			}

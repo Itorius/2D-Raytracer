@@ -1,6 +1,7 @@
 using Base;
 using OpenTK.Input;
 using Raytracer.Elements;
+using System;
 using System.Linq;
 
 namespace Raytracer
@@ -18,34 +19,20 @@ namespace Raytracer
 			if (width != 0 && height != 0) framebuffer.SetSize(width, height);
 		}
 
+		private bool[] pressed=new bool[Enum.GetNames(typeof(Key)).Length];
+		
 		public override bool OnKeyDown(KeyboardKeyEventArgs args)
 		{
-			bool handled = false;
+			pressed[(int)args.Key] = true;
 
-			if (args.Key == Key.W)
-			{
-				CameraPosition.Y -= 10f;
-				handled = true;
-			}
-			else if (args.Key == Key.S)
-			{
-				CameraPosition.Y += 10f;
-				handled = true;
-			}
-			else if (args.Key == Key.A)
-			{
-				CameraPosition.X += 10f;
-				handled = true;
-			}
-			else if (args.Key == Key.D)
-			{
-				CameraPosition.X -= 10f;
-				handled = true;
-			}
+			return true;
+		}
 
-			camera.SetPosition(CameraPosition);
+		public override bool OnKeyUp(KeyboardKeyEventArgs args)
+		{
+			pressed[(int)args.Key] = false;
 
-			return handled;
+			return true;
 		}
 		#endregion
 
@@ -69,7 +56,7 @@ namespace Raytracer
 			if (inRotationCircle)
 			{
 				rotating = true;
-				rotationOffset = Vector2.Atan(MouseWorld - selectedElement.position);
+				rotationOffset = Vector2.Atan(MouseWorld - selectedElement.Position);
 				originalRotation = selectedElement.Rotation;
 				return true;
 			}
@@ -83,7 +70,7 @@ namespace Raytracer
 				selectedElement.selected = true;
 
 				dragElement = selectedElement;
-				offset = MouseWorld - dragElement.position;
+				offset = MouseWorld - dragElement.Position;
 			}
 
 			return true;
