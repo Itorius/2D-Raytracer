@@ -52,8 +52,9 @@ namespace Raytracer.UI
 
 		public bool InternalMouseDown(MouseButtonEventArgs args, out UIElement element)
 		{
-			foreach (UIElement child in Children)
+			for (int i = Children.Count - 1; i >= 0; i--)
 			{
+				UIElement child = Children[i];
 				if (child.ContainsPoint(args.X, args.Y) && child.InternalMouseDown(args, out element)) return true;
 			}
 
