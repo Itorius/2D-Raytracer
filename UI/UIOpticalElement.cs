@@ -126,10 +126,7 @@ namespace Raytracer.UI
 			if (scale < destScale) scale += 1f * Time.DeltaDrawTime;
 			if (scale > destScale) scale -= 1f * Time.DeltaDrawTime;
 
-			// element.Size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * scale);
-
-			float s = MathF.Min(InnerDimensions.Width / origSize.X, InnerDimensions.Height / origSize.Y);
-			element.Size = origSize * s * scale;
+			element.Size = origSize * scale * MathF.Min(InnerDimensions.Width / origSize.X, InnerDimensions.Height / origSize.Y);
 
 			Renderer2D.DrawQuadTL(Dimensions.Position, Dimensions.Size, BorderColor);
 			Renderer2D.DrawQuadTL(Dimensions.Position + new Vector2(2f), Dimensions.Size - new Vector2(4f), IsMouseHovering ? HoveredColor : BackgroundColor);

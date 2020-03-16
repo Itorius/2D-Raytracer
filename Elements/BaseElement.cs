@@ -1,5 +1,4 @@
 using Base;
-using OpenTK;
 
 namespace Raytracer.Elements
 {
@@ -7,13 +6,15 @@ namespace Raytracer.Elements
 	{
 		protected Quaternion quaternion = Quaternion.Identity;
 
+		public virtual bool BlocksRays => false;
+
 		#region Backing fields
-		private Base.Vector2 _position;
-		private Base.Vector2 _size;
+		private Vector2 _position;
+		private Vector2 _size;
 		private float _rotation;
 		#endregion
 
-		public Base.Vector2 Position
+		public Vector2 Position
 		{
 			get => _position;
 			set
@@ -24,7 +25,7 @@ namespace Raytracer.Elements
 			}
 		}
 
-		public Base.Vector2 Size
+		public Vector2 Size
 		{
 			get => _size;
 			set
@@ -56,7 +57,7 @@ namespace Raytracer.Elements
 		public float RefractiveIndex = 1;
 		public bool selected;
 
-		public abstract Base.Vector2 GetTransformation(float initial, float final);
+		public abstract Vector2 GetTransformation(float initial, float final);
 
 		public virtual float GetAngle(float incoming, float initial, float final) => float.NaN;
 
@@ -70,7 +71,7 @@ namespace Raytracer.Elements
 			Renderer2D.DrawQuad(Position, Size, color, quaternion);
 		}
 
-		public bool ContainsPoint(Base.Vector2 point) => Collision.PointPolygon(rotatedCollider, point);
+		public bool ContainsPoint(Vector2 point) => Collision.PointPolygon(rotatedCollider, point);
 
 		public virtual BaseElement Clone() => (BaseElement)MemberwiseClone();
 	}

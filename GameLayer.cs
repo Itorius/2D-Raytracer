@@ -1,6 +1,5 @@
 using Base;
 using Newtonsoft.Json;
-using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 using Raytracer.Elements;
@@ -19,8 +18,8 @@ namespace Raytracer
 
 		internal static GameLayer Instance;
 
-		public static Base.Vector2 MouseWorld;
-		public static Base.Vector2 MousePosition;
+		public static Vector2 MouseWorld;
+		public static Vector2 MousePosition;
 
 		public readonly List<BaseElement> Elements = new List<BaseElement>();
 
@@ -60,7 +59,7 @@ namespace Raytracer
 
 		public override void OnUpdate()
 		{
-			Base.Vector2 velocity = Base.Vector2.Zero;
+			Vector2 velocity = Vector2.Zero;
 			if (pressed[(int)Key.W]) velocity.Y = -1f;
 			if (pressed[(int)Key.S]) velocity.Y = 1f;
 			if (pressed[(int)Key.A]) velocity.X = 1f;
@@ -69,21 +68,21 @@ namespace Raytracer
 			CameraPosition += velocity * (pressed[(int)Key.ShiftLeft] || pressed[(int)Key.ShiftRight] ? 20f : 10f);
 			camera.SetPosition(CameraPosition);
 
-			(float x, float y) = Base.Vector2.Transform(MousePosition, camera.View.Inverted());
-			MouseWorld = new Base.Vector2(x - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - y) / cameraZoom;
+			(float x, float y) = Vector2.Transform(MousePosition, camera.View.Inverted());
+			MouseWorld = new Vector2(x - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - y) / cameraZoom;
 
 			if (dragElement != null) dragElement.Position = MouseWorld - offset;
 
 			inRotationCircle = false;
 			if (selectedElement != null)
 			{
-				float dist = Base.Vector2.DistanceSquared(selectedElement.Position, MouseWorld);
+				float dist = Vector2.DistanceSquared(selectedElement.Position, MouseWorld);
 				if (dist < RotationRingMax * RotationRingMax && dist > RotationRingMin * RotationRingMin) inRotationCircle = true;
 			}
 
 			if (rotating && selectedElement != null)
 			{
-				float rot = originalRotation + Base.Vector2.Atan(MouseWorld - selectedElement.Position) - rotationOffset;
+				float rot = originalRotation + Vector2.Atan(MouseWorld - selectedElement.Position) - rotationOffset;
 				selectedElement.Rotation = pressed[(int)Key.LShift] ? MathF.Round(rot / 0.08726645F) * 0.08726645F : rot;
 			}
 
@@ -110,7 +109,7 @@ namespace Raytracer
 				s.UploadUniformFloat("u_Radius", 1f);
 				s.UploadUniformFloat("u_Thickness", 0.95f);
 
-				Renderer2D.DrawQuad(selectedElement.Position, new Base.Vector2(RotationRingSize * 2f), inRotationCircle ? Color.White : new Color(100, 100, 100, 255));
+				Renderer2D.DrawQuad(selectedElement.Position, new Vector2(RotationRingSize * 2f), inRotationCircle ? Color.White : new Color(100, 100, 100, 255));
 
 				if (rotating) Renderer2D.DrawStringFlipped($"{MathF.Asin(MathF.Sin(selectedElement.Rotation * 0.5f)) * -2f * Utility.RadToDeg:F2}°", selectedElement.Position.X + RotationRingSize + 10f, selectedElement.Position.Y + 5f, scale: 0.5f);
 
