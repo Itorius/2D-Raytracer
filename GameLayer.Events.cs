@@ -64,6 +64,10 @@ namespace Raytracer
 		private float originalRotation;
 		private bool inRotationCircle;
 		private bool rotating;
+		private bool scaling => scalingX || scalingY;
+		private bool scalingX;
+		private bool scalingY;
+		private Vector2 scaleOffset;
 
 		public override bool OnMouseMove(MouseMoveEventArgs args)
 		{
@@ -81,12 +85,31 @@ namespace Raytracer
 				return true;
 			}
 
+			if (selectedElement != null)
+			{
+				scaleOffset = MouseWorld;
+
+				if (Collision.PointPolygon(colliderX, MouseWorld))
+				{
+					scalingX = true;
+					return true;
+				}
+
+				if (Collision.PointPolygon(colliderY, MouseWorld))
+				{
+					scalingY = true;
+					return true;
+				}
+			}
+
 			if (selectedElement != null) selectedElement.selected = false;
 
 			selectedElement = Elements.LastOrDefault(element => element.ContainsPoint(MouseWorld));
 
 			if (selectedElement != null)
 			{
+				RecalculateScaleNobs();
+
 				selectedElement.selected = true;
 
 				dragElement = selectedElement;
@@ -100,6 +123,8 @@ namespace Raytracer
 		{
 			dragElement = null;
 			rotating = false;
+			scalingX = false;
+			scalingY = false;
 
 			return true;
 		}

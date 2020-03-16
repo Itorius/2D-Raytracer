@@ -4,11 +4,19 @@ using System;
 
 namespace Raytracer
 {
+	// todo: size adjustments
+	// todo: material selection
+	// todo: add the rest of elements
+	// todo: adjust focus point of lenses/curved mirrors
+	// todo: wavelenght?
+	// todo: BG grid
+	// todo: load scene from file
+
 	internal class Game : BaseWindow
 	{
 		internal static Game Instance;
 		internal static Vector2 Viewport;
-		internal static bool DebugDraw = false;
+		internal const bool DebugDraw = false;
 
 		public Game()
 		{

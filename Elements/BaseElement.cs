@@ -4,7 +4,7 @@ namespace Raytracer.Elements
 {
 	public abstract class BaseElement
 	{
-		protected Quaternion quaternion = Quaternion.Identity;
+		public Quaternion quaternion = Quaternion.Identity;
 
 		public virtual bool BlocksRays => false;
 

@@ -68,10 +68,13 @@ namespace Raytracer
 			CameraPosition += velocity * (pressed[(int)Key.ShiftLeft] || pressed[(int)Key.ShiftRight] ? 20f : 10f);
 			camera.SetPosition(CameraPosition);
 
-			(float x, float y) = Vector2.Transform(MousePosition, camera.View.Inverted());
-			MouseWorld = new Vector2(x - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - y) / cameraZoom;
+			MouseWorld = new Vector2(MousePosition.X - Game.Viewport.X * 0.5f, Game.Viewport.Y * 0.5f - MousePosition.Y) / cameraZoom - CameraPosition;
 
-			if (dragElement != null) dragElement.Position = MouseWorld - offset;
+			if (dragElement != null)
+			{
+				dragElement.Position = MouseWorld - offset;
+				RecalculateScaleNobs();
+			}
 
 			inRotationCircle = false;
 			if (selectedElement != null)
@@ -84,9 +87,60 @@ namespace Raytracer
 			{
 				float rot = originalRotation + Vector2.Atan(MouseWorld - selectedElement.Position) - rotationOffset;
 				selectedElement.Rotation = pressed[(int)Key.LShift] ? MathF.Round(rot / 0.08726645F) * 0.08726645F : rot;
+				RecalculateScaleNobs();
+			}
+
+			if (scaling && selectedElement != null)
+			{
+				if (scalingX)
+				{
+					Vector2 size = selectedElement.Size;
+					Vector2 diff = scaleOffset - MouseWorld;
+					size.X += Vector2.Dot(dirX, diff) * 0.01f;
+					selectedElement.Size = size;
+				}
+				else if (scalingY)
+				{
+					Vector2 size = selectedElement.Size;
+					Vector2 diff = scaleOffset - MouseWorld;
+					size.Y -= Vector2.Dot(dirY, diff) * 0.01f;
+					selectedElement.Size = size;
+				}
 			}
 
 			foreach (BaseElement element in Elements) element.Update();
+		}
+
+		private Vector2 nobX, nobY;
+		private Vector2 dirX, dirY;
+		private Polygon colliderX, colliderY;
+
+		private void RecalculateScaleNobs()
+		{
+			Matrix4 matrix = Matrix4.CreateRotationZ(selectedElement.Rotation);
+
+			dirX = Vector2.Transform(Vector2.UnitX, matrix);
+			nobX = selectedElement.Position - dirX * (RotationRingSize + 10f);
+			dirY = Vector2.Transform(Vector2.UnitY, matrix);
+			nobY = selectedElement.Position + dirY * (RotationRingSize + 10f);
+
+			const float colliderSize = 7.5f;
+
+			colliderX = new Polygon(new[]
+			{
+				new Vector2(nobX.X + colliderSize, nobX.Y + colliderSize),
+				new Vector2(nobX.X + colliderSize, nobX.Y - colliderSize),
+				new Vector2(nobX.X - colliderSize, nobX.Y - colliderSize),
+				new Vector2(nobX.X - colliderSize, nobX.Y + colliderSize)
+			});
+
+			colliderY = new Polygon(new[]
+			{
+				new Vector2(nobY.X + colliderSize, nobY.Y + colliderSize),
+				new Vector2(nobY.X + colliderSize, nobY.Y - colliderSize),
+				new Vector2(nobY.X - colliderSize, nobY.Y - colliderSize),
+				new Vector2(nobY.X - colliderSize, nobY.Y + colliderSize)
+			});
 		}
 
 		public override void OnRender()
@@ -109,7 +163,20 @@ namespace Raytracer
 				s.UploadUniformFloat("u_Radius", 1f);
 				s.UploadUniformFloat("u_Thickness", 0.95f);
 
-				Renderer2D.DrawQuad(selectedElement.Position, new Vector2(RotationRingSize * 2f), inRotationCircle ? Color.White : new Color(100, 100, 100, 255));
+				Renderer2D.DrawQuad(selectedElement.Position, new Vector2(RotationRingSize * 2f), (inRotationCircle || rotating) && !scaling ? Color.White : Color.White * 0.4f);
+
+				Renderer2D.EndScene();
+
+				Renderer2D.BeginScene(camera, elementShader, framebuffer);
+
+				Color colorX = (Collision.PointPolygon(colliderX, MouseWorld) || scalingX) && !rotating ? Color.Red : Color.Red * 0.5f;
+				Color colorY = (Collision.PointPolygon(colliderY, MouseWorld) || scalingY) && !rotating ? Color.Lime : Color.Lime * 0.5f;
+
+				Renderer2D.DrawLine(selectedElement.Position, nobX, colorX);
+				Renderer2D.DrawLine(selectedElement.Position, nobY, colorY);
+
+				Renderer2D.DrawQuad(nobX, new Vector2(7.5f), colorX, selectedElement.quaternion);
+				Renderer2D.DrawQuad(nobY, new Vector2(7.5f), colorY, selectedElement.quaternion);
 
 				if (rotating) Renderer2D.DrawStringFlipped($"{MathF.Asin(MathF.Sin(selectedElement.Rotation * 0.5f)) * -2f * Utility.RadToDeg:F2}°", selectedElement.Position.X + RotationRingSize + 10f, selectedElement.Position.Y + 5f, scale: 0.5f);
 

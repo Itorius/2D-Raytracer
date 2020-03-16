@@ -9,6 +9,7 @@ namespace Raytracer.Elements
 		public Blocker()
 		{
 			Color = new Color(240, 240, 240, 255);
+			ColorSelected = new Color(170, 170, 170, 255);
 
 			Size = new Vector2(100f, 100f);
 		}
