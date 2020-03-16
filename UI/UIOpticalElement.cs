@@ -71,6 +71,8 @@ namespace Raytracer.UI
 			element = (BaseElement)Activator.CreateInstance(type);
 		}
 
+		private Vector2 origSize;
+
 		protected override void Recalculate()
 		{
 			base.Recalculate();
@@ -79,7 +81,7 @@ namespace Raytracer.UI
 			InnerDimensions.Height = InnerDimensions.Width;
 
 			element.Position = InnerDimensions.Center;
-			element.Size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * 0.6f);
+			origSize = element.Size;
 		}
 
 		protected override bool MouseDown(MouseButtonEventArgs args)
@@ -93,6 +95,7 @@ namespace Raytracer.UI
 		protected override bool MouseUp(MouseButtonEventArgs args)
 		{
 			MouseElement.Position = GameLayer.MouseWorld;
+			MouseElement.Size = origSize;
 			GameLayer.Instance.Elements.Add(MouseElement);
 			MouseElement = null;
 
@@ -123,7 +126,10 @@ namespace Raytracer.UI
 			if (scale < destScale) scale += 1f * Time.DeltaDrawTime;
 			if (scale > destScale) scale -= 1f * Time.DeltaDrawTime;
 
-			element.Size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * scale);
+			// element.Size = new Vector2(MathF.Min(InnerDimensions.Width, InnerDimensions.Height) * scale);
+
+			float s = MathF.Min(InnerDimensions.Width / origSize.X, InnerDimensions.Height / origSize.Y);
+			element.Size = origSize * s * scale;
 
 			Renderer2D.DrawQuadTL(Dimensions.Position, Dimensions.Size, BorderColor);
 			Renderer2D.DrawQuadTL(Dimensions.Position + new Vector2(2f), Dimensions.Size - new Vector2(4f), IsMouseHovering ? HoveredColor : BackgroundColor);

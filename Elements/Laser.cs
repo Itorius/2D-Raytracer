@@ -17,6 +17,8 @@ namespace Raytracer.Elements
 		public Laser()
 		{
 			Color = Color.FromHsv(new Random().NextFloat(), 1f, 0.9f, 1f);
+
+			Size = new Base.Vector2(100f, 20f);
 		}
 
 		public override void Update()
@@ -60,10 +62,18 @@ namespace Raytracer.Elements
 
 				normals.Add((info.point, info.normal));
 
-				(float x, float y) = info.element.GetTransformation(initial, final);
-				float o = angle * x + angle * y;
+				float aaaa = element.GetAngle(angle, initial, final);
+				if (!float.IsNaN(aaaa))
+				{
+					direction = Base.Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, aaaa)) * (info.element is FlatMirror ? -1 : 1);
+				}
+				else
+				{
+					(float x, float y) = info.element.GetTransformation(initial, final);
+					float o = angle * x + angle * y;
 
-				direction = Base.Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, o)) * (info.element is FlatMirror ? -1 : 1);
+					direction = Base.Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, o)) * (info.element is FlatMirror ? -1 : 1);
+				}
 
 				index++;
 				if (index > 50) break;
@@ -94,7 +104,7 @@ namespace Raytracer.Elements
 
 		public void DrawRay()
 		{
-			for (int i = 0; i < collisions.Count - 1; i++) Renderer2D.DrawLine(collisions[i + 1], collisions[i], Color);
+			for (int i = 0; i < collisions.Count - 1; i++) Renderer2D.DrawLine(collisions[i + 1], collisions[i], Color, 2.5f);
 		}
 	}
 }

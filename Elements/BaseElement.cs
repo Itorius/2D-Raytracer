@@ -58,6 +58,8 @@ namespace Raytracer.Elements
 
 		public abstract Base.Vector2 GetTransformation(float initial, float final);
 
+		public virtual float GetAngle(float incoming, float initial, float final) => float.NaN;
+
 		public virtual void Update()
 		{
 		}

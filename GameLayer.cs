@@ -54,7 +54,7 @@ namespace Raytracer
 					Elements.Add(element);
 				}
 			}
-			
+
 			framebuffer = new MultisampleFramebuffer(1280, 720, 8);
 		}
 

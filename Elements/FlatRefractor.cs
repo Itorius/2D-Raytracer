@@ -1,3 +1,6 @@
+using Base;
+using System;
+
 namespace Raytracer.Elements
 {
 	public class FlatRefractor : BaseElement
@@ -5,8 +8,15 @@ namespace Raytracer.Elements
 		public FlatRefractor()
 		{
 			RefractiveIndex = Constants.RefractiveIndexes.Glass;
+
+			Size = new Vector2(80f, 200f);
 		}
 
-		public override Base.Vector2 GetTransformation(float initial, float final) => new Base.Vector2(0, initial / final);
+		public override Vector2 GetTransformation(float initial, float final) => new Vector2(0, initial / final);
+
+		public override float GetAngle(float incoming, float initial, float final)
+		{
+			return MathF.Asin(initial * MathF.Sin(incoming) / final);
+		}
 	}
 }

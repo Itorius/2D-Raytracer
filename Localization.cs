@@ -18,7 +18,7 @@ namespace Raytracer
 
 		static Localization()
 		{
-			SetLanguage(Language.Czech);
+			SetLanguage(Language.English);
 		}
 
 		public static void SetLanguage(Language language)

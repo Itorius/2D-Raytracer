@@ -19,7 +19,7 @@ namespace Raytracer.UI
 			UIPanel panel = new UIPanel
 			{
 				Width = { Percent = 1f },
-				Height = { Percent = 1f},
+				Height = { Percent = 1f },
 				BackgroundColor = new Color4(20, 20, 20, 255),
 				Padding = new Padding(8f)
 			};
