@@ -9,7 +9,7 @@ namespace Raytracer.Elements
 	{
 		public override bool BlocksRays => true;
 
-		public override Vector2 GetTransformation(float initial, float final) => new Vector2(0f, 1f);
+		// public override Vector2 GetTransformation(float initial, float final) => new Vector2(0f, 1f);
 
 		private List<Vector2> collisions = new List<Vector2>();
 
@@ -49,22 +49,23 @@ namespace Raytracer.Elements
 
 				if (element.BlocksRays) return;
 
-				float angle = Vector2.SignedAngle(info.normal, -direction);
 
 				normals.Add((info.point, info.normal));
 
-				float aaaa = element.GetAngle(angle, initial, final);
-				if (!float.IsNaN(aaaa))
-				{
-					direction = Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, aaaa)) * (info.element is FlatMirror ? -1 : 1);
-				}
-				else
-				{
-					(float x, float y) = info.element.GetTransformation(initial, final);
-					float o = angle * x + angle * y;
+				float angle = Vector2.SignedAngle(info.normal, -direction);
+				float outAngle = element.GetAngle(angle, initial, final);
+				direction = Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, outAngle)) * (info.element is FlatMirror ? -1 : 1);
 
-					direction = Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, o)) * (info.element is FlatMirror ? -1 : 1);
-				}
+				// if (!float.IsNaN(aaaa))
+				// {
+				// }
+				// else
+				// {
+				// 	(float x, float y) = info.element.GetTransformation(initial, final);
+				// 	float o = angle * x + angle * y;
+				//
+				// 	direction = Vector2.Transform(-info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, o)) * (info.element is FlatMirror ? -1 : 1);
+				// }
 
 				index++;
 				if (index > 50) break;

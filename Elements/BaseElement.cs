@@ -57,9 +57,9 @@ namespace Raytracer.Elements
 		public float RefractiveIndex = 1;
 		public bool selected;
 
-		public abstract Vector2 GetTransformation(float initial, float final);
+		// public abstract Vector2 GetTransformation(float initial, float final);
 
-		public virtual float GetAngle(float incoming, float initial, float final) => float.NaN;
+		public virtual float GetAngle(float incoming, float initial, float final) => incoming;
 
 		public virtual void Update()
 		{

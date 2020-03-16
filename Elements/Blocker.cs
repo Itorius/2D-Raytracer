@@ -14,6 +14,6 @@ namespace Raytracer.Elements
 			Size = new Vector2(100f, 100f);
 		}
 
-		public override Vector2 GetTransformation(float initial, float final) => Vector2.Zero;
+		// public override Vector2 GetTransformation(float initial, float final) => Vector2.Zero;
 	}
 }

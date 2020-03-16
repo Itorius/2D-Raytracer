@@ -12,11 +12,8 @@ namespace Raytracer.Elements
 			Size = new Vector2(80f, 200f);
 		}
 
-		public override Vector2 GetTransformation(float initial, float final) => new Vector2(0, initial / final);
+		// public override Vector2 GetTransformation(float initial, float final) => new Vector2(0, initial / final);
 
-		public override float GetAngle(float incoming, float initial, float final)
-		{
-			return MathF.Asin(initial * MathF.Sin(incoming) / final);
-		}
+		public override float GetAngle(float incoming, float initial, float final) => MathF.Asin(initial * MathF.Sin(incoming) / final);
 	}
 }
