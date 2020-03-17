@@ -20,7 +20,7 @@ namespace Raytracer
 		Sapphire
 	}
 
-	public static  class PhysicsUtility
+	public static partial class PhysicsUtility
 	{
 		public static double GetRefractiveIndex(Material material, double wavelength)
 		{

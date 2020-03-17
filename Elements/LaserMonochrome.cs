@@ -13,7 +13,7 @@ namespace Raytracer.Elements
 			set
 			{
 				_wavelength = value;
-				Color = RgbCalculator.Calc(_wavelength);
+				Color = PhysicsUtility.GetColor(_wavelength);
 			}
 		}
 
@@ -21,14 +21,14 @@ namespace Raytracer.Elements
 		{
 			Wavelength = 600f;
 		}
-		
+
 		public override void Update()
 		{
 			Vector2 direction = Vector2.Transform(Vector2.UnitX, quaternion);
 			Vector2 start = Position + direction * Size.X * 0.51f;
 			ray = new Ray(start, direction, Wavelength);
 
-			for (int i = 0; i < 10; i++) ray.Advance();
+			for (int i = 0; i < 20; i++) ray.Advance();
 		}
 
 		public override void DrawRay()

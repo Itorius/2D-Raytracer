@@ -17,7 +17,7 @@ namespace Raytracer.Elements
 			this.start = start;
 			this.direction = direction;
 			this.wavelength = wavelength;
-			color = RgbCalculator.Calc(wavelength);
+			color = PhysicsUtility.GetColor(wavelength);
 
 			collisionPoints = new List<Vector2> { start };
 		}
@@ -36,7 +36,7 @@ namespace Raytracer.Elements
 					Laser.HandleRefractiveIndices(lastCollided, element, wavelength, out float initial, out float final);
 					lastCollided = element;
 
-					start = info.point + direction * 0.01f;
+					start = info.point;
 					collisionPoints.Add(start);
 
 					if (element.BlocksRays)
@@ -47,9 +47,12 @@ namespace Raytracer.Elements
 
 					float angle = Vector2.SignedAngle(info.normal, -direction);
 
-					float scale = 1f + (1f - (float)((wavelength - LaserWhite.range.X) / (LaserWhite.range.Y - LaserWhite.range.X))) * 0.1f;
-					float outAngle = element.GetAngle(angle, initial, final) / scale;
+					float scale = 1f;
+					if (element is Refractor) scale = 1f + (1f - (float)((wavelength - LaserWhite.range.X) / (LaserWhite.range.Y - LaserWhite.range.X))) * 0.1f;
+
+					float outAngle = element.GetAngle(angle, initial, final) * scale;
 					direction = Vector2.Transform(info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, outAngle)) * (info.element is FlatMirror ? 1 : -1);
+					start += direction * 0.01f;
 				}
 				else
 				{
