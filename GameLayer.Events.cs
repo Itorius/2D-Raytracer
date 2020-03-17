@@ -132,7 +132,7 @@ namespace Raytracer
 
 		public void Save()
 		{
-			List<SaveData> list = Elements.Select(element => new SaveData(element.GetType().AssemblyQualifiedName, element.Position, element.Size, element.Rotation, element.Color, element.RefractiveIndex)).ToList();
+			List<SaveData> list = Elements.Select(element => new SaveData(element.GetType().AssemblyQualifiedName, element.Position, element.Size, element.Rotation, element.Color, element.material)).ToList();
 
 			string json = JsonConvert.SerializeObject(list, new JsonSerializerSettings
 			{
@@ -159,9 +159,9 @@ namespace Raytracer
 		public Vector2 size;
 		public float rotation;
 		public Color color;
-		public float refractionIndex;
+		public Material refractionIndex;
 
-		public SaveData(string type, Vector2 position, Vector2 size, float rotation, Color color, float refractionIndex)
+		public SaveData(string type, Vector2 position, Vector2 size, float rotation, Color color, Material refractionIndex)
 		{
 			this.type = type;
 			this.position = position;

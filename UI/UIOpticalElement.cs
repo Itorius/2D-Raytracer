@@ -87,7 +87,7 @@ namespace Raytracer.UI
 		protected override bool MouseDown(MouseButtonEventArgs args)
 		{
 			MouseElement = element.Clone();
-			if (element is Laser laser) laser.Color = Color.FromHsv(new Random().NextFloat(), 1f, 0.9f, 1f);
+			if (element is LaserMonochrome laser) laser.Wavelength = Utility.random.Next(400, 650);
 
 			return true;
 		}

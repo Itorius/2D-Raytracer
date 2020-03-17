@@ -49,7 +49,7 @@ namespace Raytracer
 					element.Position = saveData.position;
 					element.Rotation = saveData.rotation;
 					element.Color = saveData.color;
-					element.RefractiveIndex = saveData.refractionIndex;
+					element.material = saveData.refractionIndex;
 					Elements.Add(element);
 				}
 			}
@@ -178,7 +178,7 @@ namespace Raytracer
 				Renderer2D.DrawQuad(nobX, new Vector2(7.5f), colorX, selectedElement.quaternion);
 				Renderer2D.DrawQuad(nobY, new Vector2(7.5f), colorY, selectedElement.quaternion);
 
-				if (rotating) Renderer2D.DrawStringFlipped($"{MathF.Asin(MathF.Sin(selectedElement.Rotation * 0.5f)) * -2f * Utility.RadToDeg:F2}°", selectedElement.Position.X + RotationRingSize + 10f, selectedElement.Position.Y + 5f, scale: 0.5f);
+				if (rotating) Renderer2D.DrawStringFlipped($"{MathF.Asin(MathF.Sin(selectedElement.Rotation * 0.5f)) * -2f * Base.Utility.RadToDeg:F2}°", selectedElement.Position.X + RotationRingSize + 10f, selectedElement.Position.Y + 5f, scale: 0.5f);
 
 				Renderer2D.EndScene();
 			}

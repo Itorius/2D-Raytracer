@@ -28,7 +28,7 @@ namespace Raytracer
 			return hit;
 		}
 
-		public static bool CastRay(Vector2 start, Vector2 direction, out RaycastInfo info, float maxDistance = 1000000f)
+		public static bool CastRay(Vector2 start, Vector2 direction, out RaycastInfo info, float maxDistance = 1000f)
 		{
 			Line line = new Line(start, start + direction * maxDistance);
 

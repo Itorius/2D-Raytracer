@@ -14,10 +14,6 @@ void main()
 {
 	ivec2 texturePosition = ivec2(v_UV.x * u_Viewport.x, v_UV.y * u_Viewport.y);
 
-	for (int i = 0; i < 8; i++)
-	{
-		color += texelFetch(tex, texturePosition, i);
-	}
-
+	for (int i = 0; i < 8; i++) color += texelFetch(tex, texturePosition, i);
 	color /= 8.0;
 }

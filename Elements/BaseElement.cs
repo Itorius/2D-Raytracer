@@ -54,7 +54,7 @@ namespace Raytracer.Elements
 		public Polygon collider;
 		public Polygon rotatedCollider;
 
-		public float RefractiveIndex = 1;
+		public Material material = Material.BK7;
 		public bool selected;
 
 		// public abstract Vector2 GetTransformation(float initial, float final);

@@ -4,12 +4,10 @@ using System;
 
 namespace Raytracer
 {
-	// todo: size adjustments
 	// todo: material selection
 	// todo: add the rest of elements
 	// todo: adjust focus point of lenses/curved mirrors
 	// todo: wavelenght?
-	// todo: BG grid
 	// todo: load scene from file
 
 	internal class Game : BaseWindow
@@ -20,6 +18,8 @@ namespace Raytracer
 
 		public Game()
 		{
+			// ColorMapping.Test();
+			
 			Instance = this;
 
 			Layers.PushLayer(new GameLayer());
