@@ -4,7 +4,7 @@ using System;
 
 namespace Raytracer
 {
-	// todo: material selection
+	// todo : material selection
 	// todo: add the rest of elements
 	// todo: adjust focus point of lenses/curved mirrors
 	// todo: load scene from file

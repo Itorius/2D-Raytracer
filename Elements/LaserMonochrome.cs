@@ -28,7 +28,7 @@ namespace Raytracer.Elements
 			Vector2 start = Position + direction * Size.X * 0.51f;
 			ray = new Ray(start, direction, Wavelength);
 
-			for (int i = 0; i < 20; i++) ray.Advance();
+			for (int i = 0; i < 100; i++) ray.Advance();
 		}
 
 		public override void DrawRay()

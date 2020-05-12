@@ -11,9 +11,21 @@ namespace Raytracer
 		Czech
 	}
 
+	public struct Translation
+	{
+		public string entry;
+		
+		public Translation(string entry)
+		{
+			this.entry = entry;
+		}
+		
+		
+	}
+	
 	public static class Localization
 	{
-		private static Language current;
+		public static Language Current { get; private set; }
 		private static Dictionary<string, string> entries;
 
 		static Localization()
@@ -24,7 +36,7 @@ namespace Raytracer
 		public static void SetLanguage(Language language)
 		{
 			entries = new Dictionary<string, string>();
-			current = language;
+			Current = language;
 
 			entries = language switch
 			{

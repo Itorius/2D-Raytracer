@@ -26,7 +26,7 @@ namespace Raytracer.UI
 				Width = { Percent = 1f },
 				Height = { Pixels = 40f },
 				Y = { Percent = 1f },
-				Text = Localization.GetTranslation("SaveAndQuit")
+				Text = new Translation("SaveAndQuit")
 			};
 			button.OnClick += () =>
 			{
@@ -34,6 +34,20 @@ namespace Raytracer.UI
 				Game.Instance.Exit();
 			};
 			panel.Append(button);
+
+			UISwitchButton buttonLanguage = new UISwitchButton("Czech", "English")
+			{
+				Width = { Percent = 1f },
+				Height = { Pixels = 40f },
+				Padding = new Padding(8f),
+				Text = new Translation("ChangeLanguage")
+			};
+			buttonLanguage.OnClick += () =>
+			{
+				buttonLanguage.Next();
+				Localization.SetLanguage(buttonLanguage.choices[buttonLanguage.index] == "Czech" ? Language.Czech : Language.English);
+			};
+			panel.Append(buttonLanguage);
 		}
 
 		protected override void PreDraw()
