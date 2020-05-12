@@ -51,7 +51,7 @@ namespace Raytracer.Elements
 
 					float outAngle = element.GetAngle(angle, initial, final) * scale;
 
-					direction = Vector2.Transform(info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, outAngle)) * (info.element is FlatMirror ? 1 : -1);
+					direction = Vector2.Transform(info.normal, Quaternion.FromAxisAngle(Vector3.UnitZ, outAngle)) * (info.element is Mirror ? 1 : -1);
 					start += direction * 0.01f;
 				}
 				else
