@@ -131,7 +131,7 @@ namespace Raytracer.UI
 			Renderer2D.DrawQuadTL(Dimensions.Position, Dimensions.Size, BorderColor);
 			Renderer2D.DrawQuadTL(Dimensions.Position + new Vector2(2f), Dimensions.Size - new Vector2(4f), IsMouseHovering ? HoveredColor : BackgroundColor);
 
-			if (element is CurvedMirror mirror) mirror.UIDraw();
+			if (element is CircularMirror mirror) mirror.UIDraw();
 			else element.Draw();
 
 			Renderer2D.DrawQuadTL(Dimensions.Position + new Vector2(2f, Dimensions.Height - 22f), new Vector2(Dimensions.Width - 4f, 20f), IsMouseHovering ? HoveredColor : BackgroundColor);

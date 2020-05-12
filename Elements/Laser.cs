@@ -6,7 +6,7 @@ namespace Raytracer.Elements
 	{
 		public const float MaxDistance = 1000000f;
 
-		public override bool BlocksRays => true;
+		public override bool BlocksRays => false;
 
 		public Laser() => Size = new Vector2(100f, 20f);
 

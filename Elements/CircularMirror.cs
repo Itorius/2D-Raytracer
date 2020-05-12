@@ -5,7 +5,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Raytracer.Elements
 {
-	public class CurvedMirror : Mirror
+	public class CircularMirror : Mirror
 	{
 		public override Vector2 Position
 		{
@@ -56,7 +56,7 @@ namespace Raytracer.Elements
 				float x = MathF.Cos(i);
 				float y = MathF.Sin(i);
 
-				vertices.Add(center + new Vector2(x, y) * _size.X * 0.9f);
+				vertices.Add(center + new Vector2(x, y) * _size.X);
 			}
 
 			for (float i = MaxAngle; i >= -MaxAngle - AngleStep; i -= AngleStep)
@@ -64,13 +64,13 @@ namespace Raytracer.Elements
 				float x = MathF.Cos(i);
 				float y = MathF.Sin(i);
 
-				vertices.Add(center + new Vector2(x, y) * _size.X);
+				vertices.Add(center + new Vector2(x, y) * _size.X * 1.075f);
 			}
 
 			return new Polygon(vertices.ToArray());
 		}
 
-		public CurvedMirror()
+		public CircularMirror()
 		{
 			Size = new Vector2(100f, 200f);
 		}
@@ -87,14 +87,15 @@ namespace Raytracer.Elements
 		public override void Draw()
 		{
 			var color = Color.Lerp(Color, ColorSelected, selected ? Utility.UnsignedSin(Time.TotalDrawTime * 3f) : 0f);
-			foreach (Line line in rotatedCollider.lines)
-			{
-				Renderer2D.DrawLine(line.start, line.end, color, 5f);
-			}
+
+			Vector2 vec = Vector2.Normalize(rotatedCollider.vertices[rotatedCollider.vertices.Length / 4] - _position);
+
+			Renderer2D.DrawQuad(_position + vec * _size.X * 0.25f, new Vector2(2f), Color.Goldenrod);
+			Renderer2D.DrawString("F", _position.X + vec.X * _size.X * 0.25f - 6f, _position.Y + vec.Y * _size.X * 0.25f - 3f, Color.Goldenrod, 0.75f, true);
 
 			foreach (Line line in rotatedCollider.lines)
 			{
-				Renderer2D.DrawLine(line.start, line.end, Color.LimeGreen);
+				Renderer2D.DrawLine(line.start, line.end, color);
 			}
 		}
 	}

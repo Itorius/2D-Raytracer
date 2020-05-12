@@ -99,7 +99,7 @@ namespace Raytracer
 					size.X += Vector2.Dot(dirX, diff) * 0.01f;
 					selectedElement.Size = size;
 				}
-				else if (scalingY && !(selectedElement is CurvedMirror))
+				else if (scalingY && !(selectedElement is CircularMirror))
 				{
 					Vector2 size = selectedElement.Size;
 					Vector2 diff = scaleOffset - MouseWorld;
@@ -173,10 +173,10 @@ namespace Raytracer
 				Color colorY = (Collision.PointPolygon(colliderY, MouseWorld) || scalingY) && !rotating ? Color.Lime : Color.Lime * 0.5f;
 
 				Renderer2D.DrawLine(selectedElement.Position, nobX, colorX);
-				if (!(selectedElement is CurvedMirror)) Renderer2D.DrawLine(selectedElement.Position, nobY, colorY);
+				if (!(selectedElement is CircularMirror)) Renderer2D.DrawLine(selectedElement.Position, nobY, colorY);
 
 				Renderer2D.DrawQuad(nobX, new Vector2(7.5f), colorX, selectedElement.quaternion);
-				if (!(selectedElement is CurvedMirror)) Renderer2D.DrawQuad(nobY, new Vector2(7.5f), colorY, selectedElement.quaternion);
+				if (!(selectedElement is CircularMirror)) Renderer2D.DrawQuad(nobY, new Vector2(7.5f), colorY, selectedElement.quaternion);
 
 				if (rotating) Renderer2D.DrawStringFlipped($"{MathF.Asin(MathF.Sin(selectedElement.Rotation * 0.5f)) * -2f * Utility.RadToDeg:F2}°", selectedElement.Position.X + RotationRingSize + 10f, selectedElement.Position.Y + 5f, scale: 0.5f);
 
