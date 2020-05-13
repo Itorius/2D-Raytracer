@@ -1,7 +1,6 @@
 using Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Raytracer.Elements
 {
@@ -9,83 +8,7 @@ namespace Raytracer.Elements
 	{
 		public float Radius1 = 1.1f;
 		public float Radius2 = -1.1f;
-		public int segments = 30;
 		public float Thickness = 0f;
-
-		private IEnumerable<Vector2> GenerateVerticesFront()
-		{
-			for (int i = -segments; i <= segments; i++)
-			{
-			}
-
-			yield break;
-
-			// float localScale = _size.Y;
-			// float clip = localScale * 2f;
-			// float radius = Radius1 * MathF.Abs(localScale);
-			//
-			// if (Math.Abs(Radius1) < 1)
-			// {
-			// 	float s = -localScale / segments;
-			// 	for (int i = -segments / 2 - 1; i <= segments / 2; i++) yield return new Vector2(-Thickness * 0.5f, s * i + s * 0.5f);
-			// }
-			// else
-			// {
-			// 	float offset = MathF.Sqrt(4f * radius * radius - clip * clip) * 0.5f;
-			//
-			// 	float maxAngle = MathF.Atan(localScale / offset);
-			//
-			// 	Vector2 center = radius < 0 ? new Vector2(radius - Thickness * 0.5f, 0f) : new Vector2(offset - Thickness * 0.5f, 0);
-			//
-			// 	float segmentSize = 2f * maxAngle / segments;
-			//
-			// 	for (int i = -segments / 2 - 1; i <= segments / 2; i++)
-			// 	{
-			// 		float angle = i * segmentSize + segmentSize * 0.5f;
-			//
-			// 		float x = -MathF.Cos(angle);
-			// 		float y = MathF.Sin(angle) / localScale;
-			//
-			// 		Vector2 vertex =  center + new Vector2(x, y) * radius;
-			//
-			// 		yield return vertex;
-			// 	}
-			// }
-		}
-
-		private IEnumerable<Vector2> GenerateVerticesBack()
-		{
-			float localScale = _size.Y;
-			float clip = localScale * 2f;
-			float radius = Radius2 * MathF.Abs(localScale);
-
-			if (Math.Abs(Radius2) < 1)
-			{
-				float s = -localScale / segments;
-				for (int i = -segments / 2 - 1; i <= segments / 2; i++) yield return new Vector2(Thickness * 0.5f, s * i + s * 0.5f);
-			}
-			else
-			{
-				float offset = MathF.Sqrt(4f * radius * radius - clip * clip) * 0.5f;
-				float maxAngle = MathF.Atan(localScale / offset);
-
-				Vector2 center = radius > 0 ? new Vector2(radius + Thickness * 0.5f, 0f) : new Vector2(-offset + Thickness * 0.5f, 0);
-
-				float segmentSize = 2f * maxAngle / segments;
-
-				for (int i = -segments / 2 - 1; i <= segments / 2; i++)
-				{
-					float angle = i * segmentSize + segmentSize * 0.5f;
-
-					float x = -MathF.Cos(angle);
-					float y = MathF.Sin(angle) / localScale;
-
-					Vector2 vertex = center + new Vector2(x, y) * radius;
-
-					yield return vertex;
-				}
-			}
-		}
 
 		public override Vector2 Position
 		{
@@ -126,7 +49,7 @@ namespace Raytracer.Elements
 			List<Vector2> vertices = new List<Vector2>();
 
 			float radius = Radius1 * _size.Y * 0.5f;
-			float offset = MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f;
+			float offset = MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f + Thickness * 0.5f;
 
 			for (int i = 0; i <= 100; i++)
 			{
@@ -137,7 +60,7 @@ namespace Raytracer.Elements
 			}
 
 			radius = Radius2 * _size.Y * 0.5f;
-			offset = MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f;
+			offset = MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f + Thickness * 0.5f;
 
 			for (int i = 100; i >= 0; i--)
 			{
