@@ -4,8 +4,12 @@ using System;
 
 namespace Raytracer
 {
-	// todo : material selection
-	// todo: add the rest of elements
+	// todo: material selection
+	// todo: fix font rendering
+	// todo: triangular prism
+	// todo: multicast monochrome laser
+	// todo: modular adjust nob system
+	// todo: mesh rendering
 	// todo: adjust focus point of lenses/curved mirrors
 	// todo: load scene from file
 
