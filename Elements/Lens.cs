@@ -6,9 +6,9 @@ namespace Raytracer.Elements
 {
 	public class Lens : BaseElement
 	{
-		public float Radius1 = 1.1f;
-		public float Radius2 = -1.1f;
-		public float Thickness = 0f;
+		public float Radius1 = 5f;
+		public float Radius2 = 1000f;
+		public float Thickness = 5f;
 
 		public override Vector2 Position
 		{
@@ -49,25 +49,30 @@ namespace Raytracer.Elements
 			List<Vector2> vertices = new List<Vector2>();
 
 			float radius = Radius1 * _size.Y * 0.5f;
-			float offset = MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f + Thickness * 0.5f;
+
+			float offset = 0f;
+			if (Radius1 < 0) offset = radius-Thickness*0.5f;
+			else offset = MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f - Thickness * 0.5f;
 
 			for (int i = 0; i <= 100; i++)
 			{
 				float y = -_size.Y * 0.5f + _size.Y * i * 0.01f;
-				float x = -MathF.Sqrt(radius * radius - y * y);
+				float x = -MathF.Sqrt(radius * radius - y * y) * MathF.Sign(Radius1);
 
 				vertices.Add(new Vector2(x + offset, y));
 			}
 
 			radius = Radius2 * _size.Y * 0.5f;
-			offset = MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f + Thickness * 0.5f;
-
+			
+			if (Radius2 > 0) offset = radius+Thickness*0.5f;
+			else offset = -MathF.Sqrt(radius * radius * 4f - _size.Y * _size.Y) * 0.5f + Thickness * 0.5f;
+			
 			for (int i = 100; i >= 0; i--)
 			{
 				float y = -_size.Y * 0.5f + _size.Y * i * 0.01f;
-				float x = MathF.Sqrt(radius * radius - y * y);
-
-				vertices.Add(new Vector2(x - offset, y));
+				float x = -MathF.Sqrt(radius * radius - y * y)* MathF.Sign(Radius2);
+			
+				vertices.Add(new Vector2(x + offset, y));
 			}
 
 			return new Polygon(vertices.ToArray());
